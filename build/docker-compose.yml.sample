@@ -1,0 +1,16 @@
+version: '2'
+
+services:
+  gossa-server:
+    build:
+      context: ../
+      dockerfile: build/Dockerfile
+    container_name: gossa
+    restart: always
+    ports:
+      - 8001:8001
+    volumes:
+      - ~/to-share:/shared
+    environment:
+      - READONLY=true
+      - SKIP_HIDDEN_FILES=false
