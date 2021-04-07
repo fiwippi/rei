@@ -116,8 +116,7 @@ func ServerWithOpts(Host, Port, User, Pass, ExtraPath string, Symlinks, SkipHidd
 		extraPath = ExtraPath
 	}
 
-	log.Info().Str("host", host).Str("port", port).Str("user", user).
-		Str("pass", pass).Str("prefix", extraPath).Bool("symlinks", symlinks).
+	Log.Info().Str("host", host).Str("port", port).Str("prefix", extraPath).Bool("symlinks", symlinks).
 		Bool("skipHidden", skipHidden).Bool("read only", ro).Msg("Flags set")
 
 	// Confirms the path is accessible

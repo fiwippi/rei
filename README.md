@@ -4,10 +4,11 @@ A fast and simple webserver for your files:
 
 - files/directories browser & handler
 - drag-and-drop uploader
-- lightweight and dependency free
+- lightweight
 - keyboard navigation
 - fast golang static server
 - read-only mode
+- user/pass access (only 1 account supported for now)
 
 ## Install
 ```console
@@ -29,7 +30,7 @@ $ make build
 ```
 
 ## Notes
-- This is forked from gossa
+- This is forked from [gossa](https://github.com/pldubouilh/gossa)
 - Press `Ctrl/Cmd + h` to see all the UI/keyboard shortcuts.
 - Instructions for docker are in the `build/` directory
 

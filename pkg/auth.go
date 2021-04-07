@@ -52,10 +52,10 @@ func middleware(next http.Handler) http.HandlerFunc {
 				code := http.StatusUnauthorized
 				w.Header().Add("WWW-Authenticate", strategy.GetChallenge())
 				http.Error(w, http.StatusText(code), code)
-				log.Error().Err(err).Msg("Auth error")
+				Log.Error().Err(err).Msg("Auth error")
 				return
 			}
-			log.Info().Str("username", user.GetUserName()).Msg("User Authenticated")
+			Log.Info().Str("username", user.GetUserName()).Msg("User Authenticated")
 			next.ServeHTTP(w, r)
 		}
 	})

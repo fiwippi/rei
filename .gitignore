@@ -10,3 +10,4 @@ gossa_test.go
 bin
 bin/*#
 pkged.go
+rei.log
