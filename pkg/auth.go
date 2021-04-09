@@ -42,7 +42,7 @@ func validateUser(userName string) (string, auth.Info, error) {
 }
 
 // The authentication middleware
-func middleware(next http.Handler) http.HandlerFunc {
+func authMiddleware(next http.Handler) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if user == "" && pass == "" { // If no user and password then skip auth
 			next.ServeHTTP(w, r)

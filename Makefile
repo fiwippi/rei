@@ -9,6 +9,12 @@ build:
 
 .PHONY: build
 
+run-linux:
+	./bin/rei
+
+run-linux-account:
+	./bin/rei -user rei -pass rei
+
 install:
 	sudo cp bin/rei /usr/local/bin
 

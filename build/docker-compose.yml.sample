@@ -1,11 +1,11 @@
 version: '2'
 
 services:
-  gossa-server:
+  rei-server:
     build:
       context: ../
       dockerfile: build/Dockerfile
-    container_name: gossa
+    container_name: rei
     restart: always
     ports:
       - 8001:8001

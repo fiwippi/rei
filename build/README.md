@@ -1,10 +1,10 @@
 ## Docker
 Build using:
 ```sh
-# build gossa within a build container, needs to be ran within the sources, ../ from here, and run
+# build rei within a build container, needs to be ran within the sources, ../ from here, and run
 % mkdir ~/LocalDirToShare
-% docker build -t gossa -f build/Dockerfile .
-% sudo docker run -v ~/LocalDirToShare:/shared -p 8001:8001 gossa
+% docker build -t rei -f build/Dockerfile .
+% sudo docker run -v ~/LocalDirToShare:/shared -p 8001:8001 rei
 ```
 
 With docker-compose:

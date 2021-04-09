@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-// Defaults for gossa flags
+// Defaults for rei flags
 const (
 	hostDef       = "127.0.0.1"
 	portDef       = "8001"
@@ -20,11 +20,11 @@ const (
 	roDef         = false
 )
 
-// Flags for gossa
+// Flags for rei
 var symlinks, skipHidden, ro bool
 var host, port, user, pass, extraPath string
 
-var initPath = "."          // Path to the directory which gossa should serve, defaults to the current dir
+var initPath = "."          // Path to the directory which rei should serve, defaults to the current dir
 var fs http.Handler         // The fileserver handler
 var page *template.Template // Template returned to users accessing the fileserver
 
@@ -65,14 +65,14 @@ func Server() (*http.Server, error) {
 	flag.StringVar(&port, "port", portDef, "Port to listen on")
 	flag.StringVar(&user, "user", "", "Name of the Admin user")
 	flag.StringVar(&pass, "pass", "", "Pass of the Admin user")
-	flag.StringVar(&extraPath, "prefix", prefixDef, "URL prefix at which gossa can be reached, e.g. /gossa/ (slashes of importance)")
+	flag.StringVar(&extraPath, "prefix", prefixDef, "URL prefix at which rei can be reached, e.g. /rei/ (slashes of importance)")
 	flag.BoolVar(&symlinks, "follow-symlinks", symlinksDef, "follow symlinks \033[4mWARNING\033[0m: symlinks will by nature allow to escape the defined path (default: false)")
 	flag.BoolVar(&skipHidden, "skip-hidden", skipHiddenDef, "Skip hidden files")
 	flag.BoolVar(&ro, "read-only", roDef, "Read only mode (no upload, rename, move, etc...)")
 
-	// Shows gossa usage
+	// Shows rei usage
 	flag.Usage = func() {
-		fmt.Printf("\nusage: ./gossa ~/directory-to-share\n\n")
+		fmt.Printf("\nusage: ./rei ~/directory-to-share\n\n")
 		flag.PrintDefaults()
 	}
 
@@ -136,17 +136,17 @@ func ServerWithOpts(Host, Port, User, Pass, ExtraPath string, Symlinks, SkipHidd
 
 	mux := http.NewServeMux()
 
-	// Disables uploading, removing, moving of files and creation of new directories if gossa is read only
+	// Disables uploading, removing, moving of files and creation of new directories if rei is read only
 	if !ro {
-		mux.HandleFunc(extraPath+"rpc", middleware(http.HandlerFunc(rpc)))
-		mux.HandleFunc(extraPath+"post", middleware(http.HandlerFunc(upload)))
+		mux.HandleFunc(extraPath+"rpc", rpc)
+		mux.HandleFunc(extraPath+"post", upload)
 	}
 
 	// Registers main routes and creates the fileserver
-	mux.HandleFunc(extraPath+"zip", middleware(http.HandlerFunc(zipDir)))
-	mux.HandleFunc("/", middleware(http.HandlerFunc(serveContent)))
-	fs = http.StripPrefix(extraPath, middleware(http.FileServer(http.Dir(initPath))))
+	mux.HandleFunc(extraPath+"zip", zipDir)
+	mux.HandleFunc("/", serveContent)
+	fs = http.StripPrefix(extraPath, http.FileServer(http.Dir(initPath)))
 
 	// Serves the router
-	return &http.Server{Addr: host + ":" + port, Handler: mux}, nil
+	return &http.Server{Addr: host + ":" + port, Handler: LoggingMiddleware(authMiddleware(mux))}, nil
 }
