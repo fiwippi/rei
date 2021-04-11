@@ -10,6 +10,8 @@ import (
 	"strings"
 )
 
+// TODO embed using go 1.16
+
 // Defaults for rei flags
 const (
 	hostDef       = "127.0.0.1"
@@ -69,6 +71,9 @@ func Server() (*http.Server, error) {
 	flag.BoolVar(&symlinks, "follow-symlinks", symlinksDef, "follow symlinks \033[4mWARNING\033[0m: symlinks will by nature allow to escape the defined path (default: false)")
 	flag.BoolVar(&skipHidden, "skip-hidden", skipHiddenDef, "Skip hidden files")
 	flag.BoolVar(&ro, "read-only", roDef, "Read only mode (no upload, rename, move, etc...)")
+	logDir := flag.String("log-dir", "./", "Directory to write the log file to, slashes of importance")
+	logToConsole := flag.Bool("log-console", false, "Whether to log to the console")
+	logToFile := flag.Bool("log-file", true, "Whether to log to a rei.log file")
 
 	// Shows rei usage
 	flag.Usage = func() {
@@ -86,11 +91,13 @@ func Server() (*http.Server, error) {
 		initPath = strings.TrimSuffix(initPath, "\\")
 	}
 
-	return ServerWithOpts(host, port, user, pass, extraPath, symlinks, skipHidden, ro)
+	return ServerWithOpts(host, port, user, pass, extraPath, *logDir, symlinks, skipHidden, ro, *logToFile, *logToConsole)
 }
 
-func ServerWithOpts(Host, Port, User, Pass, ExtraPath string, Symlinks, SkipHidden, Ro bool) (*http.Server, error) {
+func ServerWithOpts(Host, Port, User, Pass, ExtraPath, LogDir string, Symlinks, SkipHidden, Ro, LogToFile, LogToConsole bool) (*http.Server, error) {
 	var err error
+
+	createLogger(LogDir, LogToConsole, LogToFile)
 
 	// User, Pass and the bool var do not need to be checked for defaults
 	user = User
@@ -116,8 +123,8 @@ func ServerWithOpts(Host, Port, User, Pass, ExtraPath string, Symlinks, SkipHidd
 		extraPath = ExtraPath
 	}
 
-	Log.Info().Str("host", host).Str("port", port).Str("prefix", extraPath).Bool("symlinks", symlinks).
-		Bool("skipHidden", skipHidden).Bool("read only", ro).Msg("Flags set")
+	Log.Info().Str("host", host).Str("port", port).Str("prefix", extraPath).Bool("symlinks", symlinks).Str("log-dir", LogDir).
+		Bool("skipHidden", skipHidden).Bool("read only", ro).Bool("log-console", LogToConsole).Bool("log-file", LogToFile).Msg("Flags set")
 
 	// Confirms the path is accessible
 	initPath, err = filepath.Abs(initPath)
