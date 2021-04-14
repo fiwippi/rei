@@ -111,7 +111,7 @@ func serveContent(w http.ResponseWriter, r *http.Request) {
 	if stat.IsDir() {
 		viewDir(w, fullPath, path)
 	} else { // Otherwise serve the file from the fileserver
-		fs.ServeHTTP(w, r)
+		fsHandler.ServeHTTP(w, r)
 	}
 }
 

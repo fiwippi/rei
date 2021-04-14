@@ -1,10 +1,10 @@
 package rei
 
 import (
-	"embed"
 	"flag"
 	"fmt"
 	"html/template"
+	"io/fs"
 	"net/http"
 	"path/filepath"
 	"strings"
@@ -25,11 +25,11 @@ var symlinks, skipHidden, ro bool
 var host, port, user, pass, extraPath string
 
 var initPath = "."          // Path to the directory which rei should serve, defaults to the current dir
-var fs http.Handler         // The fileserver handler
+var fsHandler http.Handler  // The fileserver handler
 var page *template.Template // Template returned to users accessing the fileserver
 
 // Read templates
-func readTemplates(f embed.FS) error {
+func readTemplates(f fs.FS) error {
 	// Parses in the template, script and stylesheet
 	templateStr, err := readFileStr(f, "static/ui.tmpl")
 	if err != nil {
@@ -59,7 +59,7 @@ func readTemplates(f embed.FS) error {
 	return nil
 }
 
-func Server(f embed.FS) (*http.Server, error) {
+func Server(f fs.FS) (*http.Server, error) {
 	// Set the flags
 	flag.StringVar(&host, "host", hostDef, "Host to listen on")
 	flag.StringVar(&port, "port", portDef, "Port to listen on")
@@ -92,7 +92,7 @@ func Server(f embed.FS) (*http.Server, error) {
 	return ServerWithOpts(host, port, user, pass, extraPath, *logDir, symlinks, skipHidden, ro, *logToFile, *logToConsole, f)
 }
 
-func ServerWithOpts(Host, Port, User, Pass, ExtraPath, LogDir string, Symlinks, SkipHidden, Ro, LogToFile, LogToConsole bool, f embed.FS) (*http.Server, error) {
+func ServerWithOpts(Host, Port, User, Pass, ExtraPath, LogDir string, Symlinks, SkipHidden, Ro, LogToFile, LogToConsole bool, f fs.FS) (*http.Server, error) {
 	var err error
 
 	createLogger(LogDir, LogToConsole, LogToFile)
@@ -150,7 +150,7 @@ func ServerWithOpts(Host, Port, User, Pass, ExtraPath, LogDir string, Symlinks, 
 	// Registers main routes and creates the fileserver
 	mux.HandleFunc(extraPath+"zip", zipDir)
 	mux.HandleFunc("/", serveContent)
-	fs = http.StripPrefix(extraPath, http.FileServer(http.Dir(initPath)))
+	fsHandler = http.StripPrefix(extraPath, http.FileServer(http.Dir(initPath)))
 
 	// Serves the router
 	return &http.Server{Addr: host + ":" + port, Handler: LoggingMiddleware(authMiddleware(mux))}, nil

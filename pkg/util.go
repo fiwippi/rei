@@ -3,9 +3,9 @@ package rei
 import (
 	"archive/zip"
 	"bytes"
-	"embed"
 	"encoding/base64"
 	"errors"
+	"io/fs"
 	"io/ioutil"
 	"path/filepath"
 	"strconv"
@@ -79,8 +79,8 @@ func humanise(bytes int64) string {
 }
 
 // Reads string from file
-func readFileStr(f embed.FS, path string) (string, error) {
-	fileBytes, err := f.ReadFile(path)
+func readFileStr(f fs.FS, path string) (string, error) {
+	fileBytes, err := fs.ReadFile(f, path)
 	if err != nil {
 		return "", err
 	}
@@ -89,7 +89,7 @@ func readFileStr(f embed.FS, path string) (string, error) {
 }
 
 // Encodes file to Base64 string
-func fileToBase64(f embed.FS, path string) (string, error) {
+func fileToBase64(f fs.FS, path string) (string, error) {
 	var b bytes.Buffer
 
 	file, err := f.Open(path)
