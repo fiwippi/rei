@@ -3,9 +3,9 @@ package rei
 import (
 	"archive/zip"
 	"bytes"
+	"embed"
 	"encoding/base64"
 	"errors"
-	"github.com/markbates/pkger"
 	"io/ioutil"
 	"path/filepath"
 	"strconv"
@@ -79,13 +79,8 @@ func humanise(bytes int64) string {
 }
 
 // Reads string from file
-func readFileStr(path string) (string, error) {
-	file, err := pkger.Open(path)
-	if err != nil {
-		return "", err
-	}
-
-	fileBytes, err := ioutil.ReadAll(file)
+func readFileStr(f embed.FS, path string) (string, error) {
+	fileBytes, err := f.ReadFile(path)
 	if err != nil {
 		return "", err
 	}
@@ -94,10 +89,10 @@ func readFileStr(path string) (string, error) {
 }
 
 // Encodes file to Base64 string
-func fileToBase64(path string) (string, error) {
+func fileToBase64(f embed.FS, path string) (string, error) {
 	var b bytes.Buffer
 
-	file, err := pkger.Open(path)
+	file, err := f.Open(path)
 	if err != nil {
 		return "", err
 	}

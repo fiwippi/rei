@@ -3,12 +3,16 @@
 package main
 
 import (
+	"embed"
 	rei "github.com/fiwippi/rei/pkg"
 	"log"
 )
 
+//go:embed static/*
+var f embed.FS
+
 func main() {
-	server, err := rei.Server()
+	server, err := rei.Server(f)
 	if err != nil {
 		log.Fatal(err)
 	}

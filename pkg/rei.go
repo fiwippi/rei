@@ -1,16 +1,14 @@
 package rei
 
 import (
+	"embed"
 	"flag"
 	"fmt"
-	"github.com/markbates/pkger"
 	"html/template"
 	"net/http"
 	"path/filepath"
 	"strings"
 )
-
-// TODO embed using go 1.16
 
 // Defaults for rei flags
 const (
@@ -31,21 +29,21 @@ var fs http.Handler         // The fileserver handler
 var page *template.Template // Template returned to users accessing the fileserver
 
 // Read templates
-func readTemplates() error {
+func readTemplates(f embed.FS) error {
 	// Parses in the template, script and stylesheet
-	templateStr, err := readFileStr(pkger.Include("/static/ui.tmpl"))
+	templateStr, err := readFileStr(f, "static/ui.tmpl")
 	if err != nil {
 		return err
 	}
-	jsStr, err := readFileStr(pkger.Include("/static/script.js"))
+	jsStr, err := readFileStr(f, "static/script.js")
 	if err != nil {
 		return err
 	}
-	styleStr, err := readFileStr(pkger.Include("/static/style.css"))
+	styleStr, err := readFileStr(f, "static/style.css")
 	if err != nil {
 		return err
 	}
-	faviconStr, err := fileToBase64(pkger.Include("/static/favicon.png"))
+	faviconStr, err := fileToBase64(f, "static/favicon.png")
 	if err != nil {
 		return err
 	}
@@ -61,7 +59,7 @@ func readTemplates() error {
 	return nil
 }
 
-func Server() (*http.Server, error) {
+func Server(f embed.FS) (*http.Server, error) {
 	// Set the flags
 	flag.StringVar(&host, "host", hostDef, "Host to listen on")
 	flag.StringVar(&port, "port", portDef, "Port to listen on")
@@ -91,10 +89,10 @@ func Server() (*http.Server, error) {
 		initPath = strings.TrimSuffix(initPath, "\\")
 	}
 
-	return ServerWithOpts(host, port, user, pass, extraPath, *logDir, symlinks, skipHidden, ro, *logToFile, *logToConsole)
+	return ServerWithOpts(host, port, user, pass, extraPath, *logDir, symlinks, skipHidden, ro, *logToFile, *logToConsole, f)
 }
 
-func ServerWithOpts(Host, Port, User, Pass, ExtraPath, LogDir string, Symlinks, SkipHidden, Ro, LogToFile, LogToConsole bool) (*http.Server, error) {
+func ServerWithOpts(Host, Port, User, Pass, ExtraPath, LogDir string, Symlinks, SkipHidden, Ro, LogToFile, LogToConsole bool, f embed.FS) (*http.Server, error) {
 	var err error
 
 	createLogger(LogDir, LogToConsole, LogToFile)
@@ -133,7 +131,7 @@ func ServerWithOpts(Host, Port, User, Pass, ExtraPath, LogDir string, Symlinks, 
 	}
 
 	// Reads in the templates
-	err = readTemplates()
+	err = readTemplates(f)
 	if err != nil {
 		return nil, err
 	}

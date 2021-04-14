@@ -196,7 +196,7 @@ func rpc(w http.ResponseWriter, r *http.Request) {
 			sendHTTPResp(w, 500, err)
 			return
 		}
-	} // TODO Error with js client
+	}
 
 	w.Write([]byte("ok"))
 }
