@@ -8,6 +8,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="viewport" content="width=device-width">
     <title>{{.Title}}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="data:image/png;base64,favicon_will_be_here" rel="icon" type="image/png" />
     <style type="text/css">css_will_be_here</style>
     <script>
@@ -45,15 +46,15 @@
 
     <div id="icHolder">
         {{if not .Ro}}
-            <div style="display:none;" onclick="document.getElementById('clickupload').click()" class="ic icon-large-upload manualUp"></div>
-            <div class="ic icon-large-folder" onclick="window.mkdirBtn()"></div>
+            <div onclick="document.getElementById('clickupload').click()" class="fa fa-upload manualUp ic"></div>
+            <div class="fa fa-folder-open-o ic" onclick="window.mkdirBtn()"></div>
         {{end}}
     </div>
 
     <table id="linkTable">
     {{range .RowsFolders}}
         <tr>
-            <td class="iconRow"><i ondblclick="return rm(event)" onclick="return rename(event)" class="btn icon icon-{{.Ext}} icon-blank"></i></td>
+            <td class="iconRow"><i ondblclick="return rm(event)" onclick="return rename(event)" class="btn fa fa-folder-open"></i></td>
             <td class="file-size"><code>{{.Size}}</code></td>
             <td class="arrow"><div class="arrow-icon"></div></td>
             <td class="display-name"><a class="list-links" oncontextmenu="return setCursorTo(event.target.innerText)" onclick="return onClickLink(event)" href="{{.Href}}">{{.Name}}</a></td>
@@ -61,7 +62,7 @@
     {{end}}
     {{range .RowsFiles}}
         <tr>
-            <td class="iconRow"><i ondblclick="return rm(event)" onclick="return rename(event)" class="btn icon icon-{{.Ext}} icon-blank"></i></td>
+            <td class="iconRow"><i ondblclick="return rm(event)" onclick="return rename(event)" class="btn fa {{ .Ext }}"></i></td>
             <td class="file-size"><code>{{.Size}}</code></td>
             <td class="arrow"><div class="arrow-icon"></div></td>
             <td class="display-name"><a class="list-links" oncontextmenu="return setCursorTo(event.target.innerText)" onclick="return onClickLink(event)" href="{{.Href}}">{{.Name}}</a></td>
@@ -73,6 +74,6 @@
     <span style="display: none;" class="barName" id="upBarName"></span>
     <div style="display: none; background-color: green;" class="barPc" id="upBarPc">1%</div>
 </div>
-<div id="ok" class="notif icon-large-ok"></div>
-<div id="sad" class="notif icon-large-sad-server"></div>
+<div id="ok" class="fa fa-check notif"></div>
+<div id="sad" class="fa fa-ban notif"></div>
 </html>

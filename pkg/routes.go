@@ -77,7 +77,7 @@ func viewDir(w http.ResponseWriter, fullPath string, path string) {
 			p.RowsFolders = append(p.RowsFolders, rowData{el.Name() + "/", template.HTML(href), "", "folder"})
 		} else {
 			sl := strings.Split(el.Name(), ".")
-			ext := strings.ToLower(sl[len(sl)-1])
+			ext := fontAwesomeType(strings.ToLower(sl[len(sl)-1]))
 			p.RowsFiles = append(p.RowsFiles, rowData{el.Name(), template.HTML(href), humanise(el.Size()), ext})
 		}
 	}

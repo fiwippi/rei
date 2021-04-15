@@ -1,5 +1,3 @@
-//go:generate pkger
-
 package main
 
 import (
@@ -7,6 +5,12 @@ import (
 	rei "github.com/fiwippi/rei/pkg"
 	"log"
 )
+
+// TODO server not showing disconnect when uploading
+// TODO When drag drop upload change the styling
+// TODO change all icons
+// TODO embed the font awesome filesheet
+// TODO ability to specify the static filepaths
 
 //go:embed static/*
 var f embed.FS
