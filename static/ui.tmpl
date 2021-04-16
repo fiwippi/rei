@@ -38,24 +38,20 @@
     </tbody></table></div>
 
     <a id="dlHelper" style="display: none;"></a>
-    <div style="display: none;" contenteditable="true" id="text-editor"></div>
     <div id="drop-grid"></div>
     <input type="file" id="clickupload" style="display:none"/>
 
     <h1 onclick="return titleClick(event)">.{{.Title}}</h1>
 
     <div class="select-block"><label for="theme_select">Sort: </label>
-            <select id="theme_select" onchange="window.setSort(value)">
+        <select id="theme_select" onchange="window.setSort(value)">
             <option value="name" onclick="window.setSort(value)">Name</option>
             <option value="size" onclick="window.setSort(value)">Size</option>
             <option value="modtime" onclick="window.setSort(value)">Mod Time</option>
         </select>
-    </div>
-
-    <div id="icHolder">
         {{if not .Ro}}
-            <div onclick="document.getElementById('clickupload').click()" class="fa fa-upload manualUp ic"></div>
-            <div class="fa fa-folder-open-o ic" onclick="window.mkdirBtn()"></div>
+        <button onclick="document.getElementById('clickupload').click()">Upload: <i  class="fa fa-upload manualUp"></i></button>
+        <button onclick="window.mkdirBtn()">New Folder: <i class="fa fa-folder-open"></i></button>
         {{end}}
     </div>
 

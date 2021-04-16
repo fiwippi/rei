@@ -13,7 +13,6 @@ import (
 // TODO more verbose moving dialogue, i.e. show percentage
 // TODO change styling of underlining when ctrl-x cutting a path
 // TODO Ctrl+D not working
-// TODO When drag drop upload change the styling
 
 //go:embed static/*
 var f embed.FS

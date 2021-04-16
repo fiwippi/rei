@@ -39,12 +39,15 @@
   background: #111;
 }
 
-select {
-  width: 110px;
+select, .select-block > button {
+  width: initial;
+  height: 35px;
   background-color: black;
   color: #A1EDD8;
   border: 1px solid #A1EDD8;
-  padding: 4px;
+  padding: 6px;
+  font-size: 1em;
+  font-family: monospace, Arial, Helvetica, sans-serif;
 }
 
 html {
@@ -139,6 +142,14 @@ td.display-name {
   margin-bottom: 20px;
 }
 
+button:focus, select:focus, select, button {
+  outline: none;
+}
+
+.select-block > button > i {
+  pointer-events: none;
+}
+
 h1 {
   display: inline-block;
   text-shadow: 3px 3px 2px #3c5951;
@@ -154,27 +165,18 @@ a:hover, h1 > span:hover, .fa:hover {
   text-shadow: 3px 3px 2px #513e3e;
 }
 
+.select-block > button > i {
+  color: inherit;
+}
+
+select:hover, .select-block > button:hover {
+  color: #f1c40f;
+  border: 1px solid #f1c40f;
+  text-shadow: 3px 3px 2px #513e3e;
+}
+
 .item-selected {
   color: #f1c40f;
-}
-
-#icHolder {
-  display: inline-block;
-  right: 15px;
-  background-color: #000000;
-  top: 34px;
-  position: absolute;
-}
-
-.ic {
-  width: 45px;
-  height: 45px;
-  cursor: pointer;
-  display: inline-block;
-  overflow: hidden;
-  color: transparent;
-  margin-left: 5px;
-  font-size: 37px;
 }
 
 #toast {
@@ -238,15 +240,15 @@ a:hover, h1 > span:hover, .fa:hover {
   right: 0px;
   left: 0px;
   z-index: 999;
-  border: 5px dashed green;
+  border: 5px dashed #A1EDD8;
   margin: 0px;
   border-radius: 5px;
   text-align: center;
   font-size: 4em;
   font-family: Helvetica;
-  color: green;
+  color: #A1EDD8;
   opacity: 1;
-  background-color: rgba(123, 123, 123, 0.2);
+  background-color: rgba(2, 2, 2, 0.6);
   padding: 20px;
 }
 
@@ -387,10 +389,6 @@ a:hover, h1 > span:hover, .fa:hover {
   text-rendering: auto;
   -webkit-font-smoothing: antialiased;
   cursor: pointer;
-}
-
-.fa.ic {
-  font-size: 37px;
 }
 
 .fa.notif {
