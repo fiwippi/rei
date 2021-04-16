@@ -11,7 +11,6 @@ const rmMsg = () => !confirm('Remove file?\n')
 const ensureMove = () => !confirm('move items?')
 const isRo = () => window.ro
 
-const sortType = ""
 const upBarName = document.getElementById('upBarName')
 const upBarPc = document.getElementById('upBarPc')
 const upGrid = document.getElementById('drop-grid')
@@ -119,16 +118,19 @@ function rpc (call, args, cb) {
   const xhr = new XMLHttpRequest()
   xhr.open('POST', location.origin + window.extraPath + '/rpc')
   xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8')
+  xhr.timeout = 5000; // Set timeout to 5 seconds (5000 milliseconds)
+  xhr.onerror = () => flicker(sadBadge)
+  xhr.ontimeout = () => flicker(sadBadge)
   xhr.onreadystatechange = function () {
     // In local files, status is 0 upon success in Mozilla Firefox
     if(xhr.readyState === XMLHttpRequest.DONE) {
       let status = xhr.status;
+      console.log("STATUS", status)
       if (status === 0 || (status >= 200 && status < 400)) {
         // The request has been completed successfully
         console.log(xhr.responseText);
         cb();
       } else {
-        console.log(xhr.responseText)
         flicker(sadBadge)
       }
     }
@@ -203,8 +205,8 @@ function postFile (file, path) {
 
 const parseDomFolder = f => f.createReader().readEntries(e => e.forEach(i => parseDomItem(i)))
 
-function parseDomItem (domFile, shoudCheckDupes) {
-  if (shoudCheckDupes && isDupe(domFile.name)) {
+function parseDomItem (domFile, shouldCheckDupes) {
+  if (shouldCheckDupes && isDupe(domFile.name)) {
     return
   }
   if (domFile.isFile) {
@@ -289,8 +291,15 @@ document.ondrop = e => {
 
   // move to a folder
   if (draggingSrc && t) {
-    const dest = t.innerHTML + draggingSrc
-    ensureMove() || mvCall(prependPath(draggingSrc), prependPath(dest), refresh)
+    let dest = t.innerHTML + draggingSrc
+    // let src = prependPath(draggingSrc)
+    if (dest.startsWith("../")) {
+      dest = prependPath(dest.substring(3, dest.length))
+      dest = dest.split("/").slice(0, -2).join("/") + "/" + draggingSrc
+    }
+
+    console.log(prependPath(draggingSrc), dest)
+    ensureMove() || mvCall(prependPath(draggingSrc), dest, refresh)
   // ... or upload
   } else if (e.dataTransfer.items.length) {
     Array.from(e.dataTransfer.items).forEach(pushEntry)
@@ -555,6 +564,9 @@ document.body.addEventListener('keydown', e => {
 
       case 'KeyU':
         return prevent(e) || isRo() || manualUpload.click()
+
+      case 'KeyD':
+        return prevent(e) || isRo() || window.rm(e)
 
       case 'Enter':
       case 'ArrowRight':

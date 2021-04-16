@@ -41,6 +41,8 @@ type rpcCall struct {
 	Args []string `json:"args"` // Additional arguments
 }
 
+// TODO investiagte mv call
+
 // Returns a HTML page for the directory to the client
 func viewDir(w http.ResponseWriter, fullPath, path, sortType string) {
 	// Collects files in the requested directory and sorts them

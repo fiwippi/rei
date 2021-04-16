@@ -1,16 +1,14 @@
-version: '2'
+version: '3'
 
 services:
   rei-server:
-    build:
-      context: ../
-      dockerfile: build/Dockerfile
+    build: .
     container_name: rei
     restart: always
     ports:
       - 8001:8001
     volumes:
-      - ~/to-share:/shared
+      - ./:/shared
     environment:
-      - READONLY=true
+      - READONLY=false
       - SKIP_HIDDEN_FILES=false

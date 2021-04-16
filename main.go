@@ -2,22 +2,20 @@ package main
 
 import (
 	"embed"
+	"fmt"
 	rei "github.com/fiwippi/rei/pkg"
 	"io/fs"
 	"log"
 )
 
-// TODO removed unused js, e.g. pics holder
-// TODO at the end, verify dockerfile works
-// TODO ability to drag drop file one directory up?
-// TODO more verbose moving dialogue, i.e. show percentage
-// TODO change styling of underlining when ctrl-x cutting a path
-// TODO Ctrl+D not working
+// TODO update readme with gif video
 
 //go:embed static/*
 var f embed.FS
 
 func main() {
+	fmt.Println("STARTING...")
+
 	f, err := fs.Sub(f, "static")
 	if err != nil {
 		log.Fatal(err)
