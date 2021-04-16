@@ -8,7 +8,6 @@ import (
 )
 
 // TODO removed unused js, e.g. pics holder
-// TODO add modtime
 // TODO at the end, verify dockerfile works
 // TODO add more sorting options e.g. by size, by modtime
 // TODO ability to drag drop file one directory up?

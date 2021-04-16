@@ -3,6 +3,7 @@ package rei
 import (
 	"archive/zip"
 	"encoding/json"
+	"fmt"
 	"html"
 	"html/template"
 	"io"
@@ -16,10 +17,11 @@ import (
 
 // Represents a row of data on the fileserver, i.e. an item in a directory
 type rowData struct {
-	Name string        // Name of the file/folder
-	Href template.HTML // Href to the row item
-	Size string        // Size of the file (if applicable)
-	Ext  string        // Extension of the file (if applicable)
+	Name    string        // Name of the file/folder
+	Href    template.HTML // Href to the row item
+	Size    string        // Size of the file (if applicable)
+	Ext     string        // Extension of the file (if applicable)
+	ModTime string        // Time the file was modified
 }
 
 // Represents a directory listing
@@ -58,7 +60,7 @@ func viewDir(w http.ResponseWriter, fullPath string, path string) {
 	title := "/" + strings.TrimPrefix(path, fsPath)
 	p := pageData{}
 	if path != fsPath { // If the path is not the root dir then add a listing to go back one dir
-		p.RowsFolders = append(p.RowsFolders, rowData{"../", "../", "", "folder"})
+		p.RowsFolders = append(p.RowsFolders, rowData{Name: "../", Href: "../", Size: "", Ext: "folder", ModTime: ""})
 	}
 	p.ExtraPath = template.HTML(html.EscapeString(extraPath))
 	p.StaticPath = template.HTML(html.EscapeString(staticPath))
@@ -74,12 +76,16 @@ func viewDir(w http.ResponseWriter, fullPath string, path string) {
 		if el.IsDir() && strings.HasPrefix(href, "/") {
 			href = strings.Replace(href, "/", "", 1)
 		}
+
+		year, month, day := el.ModTime().Date()
+		hour, min, sec := el.ModTime().Clock()
+		modtime := fmt.Sprintf("%02d/%02d/%04d %02d:%02d:%02d", day, month, year, hour, min, sec)
 		if el.IsDir() {
-			p.RowsFolders = append(p.RowsFolders, rowData{el.Name() + "/", template.HTML(href), "", "folder"})
+			p.RowsFolders = append(p.RowsFolders, rowData{el.Name() + "/", template.HTML(href), "", "folder", modtime})
 		} else {
 			sl := strings.Split(el.Name(), ".")
 			ext := fontAwesomeType(strings.ToLower(sl[len(sl)-1]))
-			p.RowsFiles = append(p.RowsFiles, rowData{el.Name(), template.HTML(href), humanise(el.Size()), ext})
+			p.RowsFiles = append(p.RowsFiles, rowData{el.Name(), template.HTML(href), humanise(el.Size()), ext, modtime})
 		}
 	}
 
