@@ -42,14 +42,23 @@ type rpcCall struct {
 }
 
 // Returns a HTML page for the directory to the client
-func viewDir(w http.ResponseWriter, fullPath string, path string) {
+func viewDir(w http.ResponseWriter, fullPath, path, sortType string) {
 	// Collects files in the requested directory and sorts them
 	_files, err := ioutil.ReadDir(fullPath)
 	if err != nil {
 		sendHTTPResp(w, 500, err)
 		return
 	}
-	sort.Slice(_files, func(i, j int) bool { return strings.ToLower(_files[i].Name()) < strings.ToLower(_files[j].Name()) })
+
+	switch sortType {
+	case "size":
+		sort.Slice(_files, func(i, j int) bool { return _files[i].Size() > _files[j].Size() })
+	case "modtime":
+		sort.Slice(_files, func(i, j int) bool { return _files[i].ModTime().After(_files[j].ModTime()) })
+	default:
+		sort.Slice(_files, func(i, j int) bool { return strings.ToLower(_files[i].Name()) < strings.ToLower(_files[j].Name()) })
+
+	}
 
 	// Compatibility
 	if !strings.HasSuffix(path, "/") {
@@ -116,7 +125,12 @@ func serveContent(w http.ResponseWriter, r *http.Request) {
 
 	// If the item is a folder then serve a directory listing
 	if stat.IsDir() {
-		viewDir(w, fullPath, path)
+		// Check what sorting is needed
+		if val, found := r.URL.Query()["sort"]; found {
+			viewDir(w, fullPath, path, val[0])
+		} else {
+			viewDir(w, fullPath, path, "date")
+		}
 	} else { // Otherwise serve the file from the fileserver
 		fsHandler.ServeHTTP(w, r)
 	}

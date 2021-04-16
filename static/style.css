@@ -39,6 +39,14 @@
   background: #111;
 }
 
+select {
+  width: 110px;
+  background-color: black;
+  color: #A1EDD8;
+  border: 1px solid #A1EDD8;
+  padding: 4px;
+}
+
 html {
   color: #A1EDD8;
   background-color: #000000;
@@ -125,6 +133,10 @@ td.display-name {
   overflow-x: hidden;
   white-space: nowrap;
   max-width: 100px;
+}
+
+.select-block {
+  margin-bottom: 20px;
 }
 
 h1 {

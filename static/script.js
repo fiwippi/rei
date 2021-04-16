@@ -11,6 +11,7 @@ const rmMsg = () => !confirm('Remove file?\n')
 const ensureMove = () => !confirm('move items?')
 const isRo = () => window.ro
 
+const sortType = ""
 const upBarName = document.getElementById('upBarName')
 const upBarPc = document.getElementById('upBarPc')
 const upGrid = document.getElementById('drop-grid')
@@ -34,9 +35,18 @@ const flicker = w => w.classList.remove('runFade') || void w.offsetWidth || w.cl
 // Manual upload
 manualUpload.addEventListener('change', () => Array.from(manualUpload.files).forEach(f => isDupe(f.name) || postFile(f, '/' + f.name)), false)
 
+// Sorting
+window.setSort = function set_sort(value) {
+  browseTo(location.href.substring(0, location.href.length-1) + '?sort=' + value, false)
+}
+
 // Soft nav
 async function browseTo (href, flickerDone, skipHistory) {
-  console.log(href)
+  const urlParams = new URLSearchParams(href.substring(location.href.length-1, href.length));
+  const sortingOperation = urlParams.has('sort');
+  const sortingValue = urlParams.get('sort');
+
+  console.log("browsing to: " + href)
   try {
     const r = await fetch(href, { credentials: 'include' })
     const t = await r.text()
@@ -55,6 +65,10 @@ async function browseTo (href, flickerDone, skipHistory) {
     }
 
     init()
+    if (sortingOperation) {
+      document.getElementById("theme_select").value = sortingValue;
+    }
+
     if (flickerDone) flicker(okBadge)
   } catch (error) {
     flicker(sadBadge)

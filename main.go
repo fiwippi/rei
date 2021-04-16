@@ -9,7 +9,6 @@ import (
 
 // TODO removed unused js, e.g. pics holder
 // TODO at the end, verify dockerfile works
-// TODO add more sorting options e.g. by size, by modtime
 // TODO ability to drag drop file one directory up?
 // TODO more verbose moving dialogue, i.e. show percentage
 // TODO change styling of underlining when ctrl-x cutting a path
