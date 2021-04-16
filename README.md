@@ -31,7 +31,7 @@ $ make build
 
 ## Notes
 - This is forked from [gossa](https://github.com/pldubouilh/gossa)
-- Press `Ctrl/Cmd + h` to see all the UI/keyboard shortcuts.
+- Press `Ctrl + h` to see all the UI/keyboard shortcuts.
 - Instructions for docker are in the `build/` directory
 
 ## License

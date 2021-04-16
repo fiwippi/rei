@@ -55,7 +55,6 @@ a {
   background-color: transparent !important;
   outline: 0;
 }
-
 a.linkSelected {
   border-bottom: .01em solid #dfe6e9;
 }
@@ -125,7 +124,7 @@ h1 {
   cursor: pointer;
 }
 
-h1 > span:hover {
+a:hover, h1 > span:hover, .fa:hover, .item-selected {
   color: #f1c40f;
   text-shadow: 3px 3px 2px #513e3e;
 }

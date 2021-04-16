@@ -7,10 +7,14 @@ import (
 	"log"
 )
 
+// TODO add modtime
+// TODO at the end, verify dockerfile works
+// TODO add more sorting options e.g. by size, by modtime
+// TODO capitalisation and formatting in help message
 // TODO styling hovering over files/folders
 // TODO ability to drag drop file one directory up?
-// TODO more verbose moving dialogue
-// TODO change styling of cut path
+// TODO more verbose moving dialogue, i.e. show percentage
+// TODO change styling of underlining when ctrl-x cutting a path
 // TODO Ctrl+D not working
 // TODO server not showing disconnect when uploading
 // TODO When drag drop upload change the styling

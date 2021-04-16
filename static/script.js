@@ -332,6 +332,12 @@ function scrollToArrow () {
   }
 }
 
+function clearItemSelected () {
+  const item = getASelected()
+  if (!item) { return }
+  item.classList.remove('item-selected')
+}
+
 function clearArrowSelected () {
   const arr = getArrowSelected()
   if (!arr) { return }
@@ -341,6 +347,7 @@ function clearArrowSelected () {
 window.setCursorTo = setCursorTo
 function setCursorTo (where) {
   if (!where) return false
+  clearItemSelected()
   clearArrowSelected()
   let a = allA.find(el => el.innerText === where || el.innerText === where + '/')
 
@@ -354,6 +361,7 @@ function setCursorTo (where) {
 
   const icon = a.parentElement.parentElement.querySelectorAll('.arrow-icon')[0]
   icon.classList.add('arrow-selected')
+  getASelected().classList.add("item-selected")
   scrollToArrow()
   storeArrow(where)
   return true
@@ -363,6 +371,7 @@ function moveArrow (down) {
   const all = Array.from(document.querySelectorAll('.arrow-icon'))
   let i = all.findIndex(el => el.classList.contains('arrow-selected'))
 
+  clearItemSelected()
   clearArrowSelected()
 
   if (down) {
@@ -372,6 +381,7 @@ function moveArrow (down) {
   }
 
   all[i].classList.add('arrow-selected')
+  getASelected().classList.add("item-selected")
   storeArrow(getASelected().innerText)
   scrollToArrow()
 }
@@ -569,6 +579,7 @@ function init () {
   if (!successRestore) {
     const entries = table.querySelectorAll('.arrow-icon')
     entries.length == 1 ? entries[0].classList.add('arrow-selected') : entries[1].classList.add('arrow-selected')
+    getASelected().classList.add("item-selected")
   }
 
   setTitle()
