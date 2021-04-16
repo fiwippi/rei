@@ -1,10 +1,3 @@
-gossa
-gossa-linux64
-gossa-linux-arm
-gossa-linux-arm64
-gossa-mac
-gossa-windows.exe
-gossa_test.go
 .idea
 .idea/*
 bin

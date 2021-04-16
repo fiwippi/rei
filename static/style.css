@@ -192,7 +192,7 @@ a:hover, h1 > span:hover, .fa:hover {
   bottom: 0px;
   max-height: 50%;
   overflow-x: hidden;
-  background-color: #2d3436;
+  background-color: #000000;
 }
 
 .barName {
@@ -201,12 +201,12 @@ a:hover, h1 > span:hover, .fa:hover {
 
 .barPc {
   width: 1%;
-  height: 35px;
+  height: 20px;
   text-align: center;
-  line-height: 30px;
+  vertical-align: middle;
+  color: #3c5951;
   min-width: 30px;
   margin-top: 5px;
-  color: white;
   margin-bottom: 5px;
 }
 
@@ -377,4 +377,5 @@ a:hover, h1 > span:hover, .fa:hover {
 
 .fa.notif {
   font-size: 37px;
+  pointer-events: none;
 }

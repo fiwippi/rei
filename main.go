@@ -7,7 +7,7 @@ import (
 	"log"
 )
 
-// TODO light and dark theme
+// TODO removed unused js, e.g. pics holder
 // TODO add modtime
 // TODO at the end, verify dockerfile works
 // TODO add more sorting options e.g. by size, by modtime
@@ -15,7 +15,6 @@ import (
 // TODO more verbose moving dialogue, i.e. show percentage
 // TODO change styling of underlining when ctrl-x cutting a path
 // TODO Ctrl+D not working
-// TODO server not showing disconnect when uploading
 // TODO When drag drop upload change the styling
 
 //go:embed static/*

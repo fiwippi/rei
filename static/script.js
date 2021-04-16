@@ -90,11 +90,13 @@ window.onpopstate = () => prevPage(location.href, true)
 function upload (id, what, path, cbDone, cbErr, cbUpdate) {
   const xhr = new XMLHttpRequest()
   xhr.open('POST', location.origin + window.extraPath + '/post')
-  xhr.setRequestHeader('gossa-path', path)
+  xhr.setRequestHeader('rei-path', path)
   xhr.upload.addEventListener('load', cbDone)
   xhr.upload.addEventListener('progress', cbUpdate)
   xhr.upload.addEventListener('error', cbErr)
   xhr.upload.id = id
+  xhr.timeout = 5000; // Set timeout to 5 seconds (5000 milliseconds)
+  xhr.ontimeout = function () { cbErr() }
   xhr.send(what)
 }
 
@@ -142,10 +144,23 @@ function shouldRefresh () {
     totalUploads = 0
     totalUploadsSize = 0
     totalUploadedSize = []
+    upBarPc.innerText = "0%"
+    upBarPc.style.width = "0%"
     upBarPc.style.display = upBarName.style.display = 'none'
     table.classList.remove('uploading-table')
     setTimeout(refresh, 200)
   }
+}
+
+function uploadFailed () {
+  window.onbeforeunload = null
+  totalDone = 0
+  totalUploads = 0
+  totalUploadsSize = 0
+  totalUploadedSize = []
+  upBarPc.style.display = upBarName.style.display = 'none'
+  table.classList.remove('uploading-table')
+  setTimeout(refresh, 200)
 }
 
 function updatePercent (ev) {
@@ -169,7 +184,7 @@ function postFile (file, path) {
 
   const formData = new FormData()
   formData.append(file.name, file)
-  upload(totalUploads, formData, encodeURIComponent(path), shouldRefresh, null, updatePercent)
+  upload(totalUploads, formData, encodeURIComponent(path), shouldRefresh, uploadFailed, updatePercent)
 }
 
 const parseDomFolder = f => f.createReader().readEntries(e => e.forEach(i => parseDomItem(i)))

@@ -32,7 +32,7 @@ type pageData struct {
 }
 
 // Remote Procedure Call, this is a json struct which
-// gossa receives from the client and performs actions
+// rei receives from the client and performs actions
 // based on it, e.g. moving, uploading and removing files
 type rpcCall struct {
 	Call string   `json:"call"` // What type of action to perform
@@ -119,7 +119,7 @@ func serveContent(w http.ResponseWriter, r *http.Request) {
 // Uploads a file to a path specified by "gossa-path"
 func upload(w http.ResponseWriter, r *http.Request) {
 	// Gets upload path and validates it
-	path, _ := url.PathUnescape(r.Header.Get("gossa-path"))
+	path, _ := url.PathUnescape(r.Header.Get("rei-path"))
 	reader, _ := r.MultipartReader()
 	part, _ := reader.NextPart()
 	fp, err := validPath(path)

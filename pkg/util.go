@@ -55,7 +55,7 @@ func validPath(p string) (string, error) {
 
 	// Error returned if:
 	// 1. Can't resolve absolute path or symlink
-	// 2. The filepath does not begin with the dir gossa is serving (it's out of bounds)
+	// 2. The filepath does not begin with the dir rei is serving (it's out of bounds)
 	// 3. File is hidden and hidden files functionality is off
 	// 4. File is symlink and symlink functionality is off
 	if absErr != nil || !strings.HasPrefix(fp, initPath) || skipHidden && strings.Contains(p, "/.") || !symlinks && len(sl) > 0 && !strings.HasPrefix(sl, initPath) {
