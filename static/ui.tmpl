@@ -8,9 +8,10 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="viewport" content="width=device-width">
     <title>{{.Title}}</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
+    <link rel="stylesheet" href="{{.StaticPath}}style.css">
+    <link rel="stylesheet" href="{{.StaticPath}}fontawesome.css">
     <link href="data:image/png;base64,favicon_will_be_here" rel="icon" type="image/png" />
-    <style type="text/css">css_will_be_here</style>
     <script>
         window.ro = {{.Ro}}
         window.extraPath = {{.ExtraPath}}.slice(0, -1)

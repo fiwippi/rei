@@ -49,7 +49,7 @@ func walkZip(wz *zip.Writer, fp, baseInZip string) error {
 
 // Ensures paths which the user is trying to access are valid
 func validPath(p string) (string, error) {
-	joined := filepath.Join(initPath, strings.TrimPrefix(p, extraPath))
+	joined := filepath.Join(initPath, strings.TrimPrefix(p, fsPath))
 	fp, absErr := filepath.Abs(joined)
 	sl, _ := filepath.EvalSymlinks(fp) // Symlink error can be ignored since length of sl will be zero
 

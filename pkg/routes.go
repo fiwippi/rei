@@ -24,11 +24,11 @@ type rowData struct {
 
 // Represents a directory listing
 type pageData struct {
-	Title       template.HTML // Title of the HTML Window
-	ExtraPath   template.HTML // The extra path prepended to initpath
-	Ro          bool          // Read only
-	RowsFiles   []rowData     // Files in the directory
-	RowsFolders []rowData     // Folders in the directory
+	Title                 template.HTML // Title of the HTML Window
+	ExtraPath, StaticPath template.HTML // The extra path prepended to initpath
+	Ro                    bool          // Read only
+	RowsFiles             []rowData     // Files in the directory
+	RowsFolders           []rowData     // Folders in the directory
 }
 
 // Remote Procedure Call, this is a json struct which
@@ -55,12 +55,13 @@ func viewDir(w http.ResponseWriter, fullPath string, path string) {
 	}
 
 	// Create data for the page template
-	title := "/" + strings.TrimPrefix(path, extraPath)
+	title := "/" + strings.TrimPrefix(path, fsPath)
 	p := pageData{}
-	if path != extraPath { // If the path is not the root dir then add a listing to go back one dir
+	if path != fsPath { // If the path is not the root dir then add a listing to go back one dir
 		p.RowsFolders = append(p.RowsFolders, rowData{"../", "../", "", "folder"})
 	}
 	p.ExtraPath = template.HTML(html.EscapeString(extraPath))
+	p.StaticPath = template.HTML(html.EscapeString(staticPath))
 	p.Ro = ro
 	p.Title = template.HTML(html.EscapeString(title))
 
@@ -88,8 +89,8 @@ func viewDir(w http.ResponseWriter, fullPath string, path string) {
 // Either serves a directory listing or a file itself from the file server
 func serveContent(w http.ResponseWriter, r *http.Request) {
 	// Ensures the extra path is used
-	if !strings.HasPrefix(r.URL.Path, extraPath) {
-		http.Redirect(w, r, extraPath, 302)
+	if !strings.HasPrefix(r.URL.Path, fsPath) {
+		http.Redirect(w, r, fsPath, 302)
 		return
 	}
 

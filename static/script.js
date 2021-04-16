@@ -36,6 +36,7 @@ manualUpload.addEventListener('change', () => Array.from(manualUpload.files).for
 
 // Soft nav
 async function browseTo (href, flickerDone, skipHistory) {
+  console.log(href)
   try {
     const r = await fetch(href, { credentials: 'include' })
     const t = await r.text()
@@ -46,7 +47,7 @@ async function browseTo (href, flickerDone, skipHistory) {
     // check if is current path - if so skip following
     if (pageTitle.innerText !== title) {
       if (!skipHistory) {
-        history.pushState({}, '', encodeURI(window.extraPath + title))
+        history.pushState({}, '', encodeURI(window.extraPath + "/fs" + title))
       }
       pageTitle.innerText = title
       pageH1.innerText = '.' + title
@@ -200,7 +201,7 @@ window.titleClick = function (e) {
   const p = Array.from(document.querySelector("h1").childNodes).map(k => k.innerText)
   const i = p.findIndex(s => s === e.target.innerText)
   const dst = p.slice(0, i + 1).join("").slice(1)
-  const target = location.origin + window.extraPath + encodeURI(dst)
+  const target = location.origin + window.extraPath + "/fs" + encodeURI(dst)
   browseTo(target, false)
 }
 
@@ -572,7 +573,7 @@ function init () {
 
   setTitle()
   scrollToArrow()
-  console.log('browsed to ' + location.href)
+  console.log('browsed to ' + location.href, extraPath)
 
   if (cuts.length) {
     const match = allA.filter(a => cuts.find(c => c === decode(a.href)))

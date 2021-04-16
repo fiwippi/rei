@@ -22,7 +22,7 @@ const (
 
 // Flags for rei
 var symlinks, skipHidden, ro bool
-var host, port, user, pass, extraPath string
+var host, port, user, pass, extraPath, staticPath, fsPath string
 
 var initPath = "."          // Path to the directory which rei should serve, defaults to the current dir
 var fsHandler http.Handler  // The fileserver handler
@@ -31,25 +31,20 @@ var page *template.Template // Template returned to users accessing the fileserv
 // Read templates
 func readTemplates(f fs.FS) error {
 	// Parses in the template, script and stylesheet
-	templateStr, err := readFileStr(f, "static/ui.tmpl")
+	templateStr, err := readFileStr(f, "ui.tmpl")
 	if err != nil {
 		return err
 	}
-	jsStr, err := readFileStr(f, "static/script.js")
+	jsStr, err := readFileStr(f, "script.js")
 	if err != nil {
 		return err
 	}
-	styleStr, err := readFileStr(f, "static/style.css")
-	if err != nil {
-		return err
-	}
-	faviconStr, err := fileToBase64(f, "static/favicon.png")
+	faviconStr, err := fileToBase64(f, "favicon.png")
 	if err != nil {
 		return err
 	}
 
 	templateStr = strings.ReplaceAll(templateStr, "js_will_be_here", jsStr)
-	templateStr = strings.ReplaceAll(templateStr, "css_will_be_here", styleStr)
 	templateStr = strings.ReplaceAll(templateStr, "favicon_will_be_here", faviconStr)
 
 	page, err = template.New("pageTemplate").Parse(templateStr)
@@ -120,6 +115,8 @@ func ServerWithOpts(Host, Port, User, Pass, ExtraPath, LogDir string, Symlinks, 
 	} else {
 		extraPath = ExtraPath
 	}
+	staticPath = extraPath + "static/"
+	fsPath = extraPath + "fs/"
 
 	Log.Info().Str("host", host).Str("port", port).Str("prefix", extraPath).Bool("symlinks", symlinks).Str("log-dir", LogDir).
 		Bool("skipHidden", skipHidden).Bool("read only", ro).Bool("log-console", LogToConsole).Bool("log-file", LogToFile).Msg("Flags set")
@@ -149,9 +146,9 @@ func ServerWithOpts(Host, Port, User, Pass, ExtraPath, LogDir string, Symlinks, 
 
 	// Registers main routes and creates the fileserver
 	mux.HandleFunc(extraPath+"zip", zipDir)
-	mux.HandleFunc("/", serveContent)
-	fsHandler = http.StripPrefix(extraPath, http.FileServer(http.Dir(initPath)))
-
+	mux.HandleFunc(fsPath, serveContent)
+	mux.Handle(staticPath, http.StripPrefix(staticPath, http.FileServer(http.FS(f))))
+	fsHandler = http.StripPrefix(fsPath, http.FileServer(http.Dir(initPath)))
 	// Serves the router
 	return &http.Server{Addr: host + ":" + port, Handler: LoggingMiddleware(authMiddleware(mux))}, nil
 }
