@@ -1,4 +1,7 @@
 # rei
+
+![e](assets/example.gif)
+
 ## Overview
 A fast and simple webserver for your files:
 

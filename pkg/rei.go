@@ -145,6 +145,7 @@ func ServerWithOpts(Host, Port, User, Pass, ExtraPath, LogDir string, Symlinks, 
 	}
 
 	// Registers main routes and creates the fileserver
+	mux.HandleFunc(extraPath, redirectToFs)
 	mux.HandleFunc(extraPath+"zip", zipDir)
 	mux.HandleFunc(fsPath, serveContent)
 	mux.Handle(staticPath, http.StripPrefix(staticPath, http.FileServer(http.FS(f))))

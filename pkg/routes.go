@@ -41,8 +41,6 @@ type rpcCall struct {
 	Args []string `json:"args"` // Additional arguments
 }
 
-// TODO investiagte mv call
-
 // Returns a HTML page for the directory to the client
 func viewDir(w http.ResponseWriter, fullPath, path, sortType string) {
 	// Collects files in the requested directory and sorts them
@@ -242,4 +240,9 @@ func zipDir(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	wz.Close()
+}
+
+//
+func redirectToFs(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, "/fs", 302)
 }

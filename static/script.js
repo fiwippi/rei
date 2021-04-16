@@ -45,7 +45,7 @@ async function browseTo (href, flickerDone, skipHistory) {
   const sortingOperation = urlParams.has('sort');
   const sortingValue = urlParams.get('sort');
 
-  console.log("browsing to: " + href)
+  console.log("browsing to: " + href, "sort: " + sortingValue + " " + sortingOperation)
   try {
     const r = await fetch(href, { credentials: 'include' })
     const t = await r.text()
@@ -66,6 +66,8 @@ async function browseTo (href, flickerDone, skipHistory) {
     init()
     if (sortingOperation) {
       document.getElementById("theme_select").value = sortingValue;
+    } else {
+      document.getElementById("theme_select").value = "name";
     }
 
     if (flickerDone) flicker(okBadge)
