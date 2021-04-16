@@ -8,7 +8,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="viewport" content="width=device-width">
     <title>{{.Title}}</title>
-<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
     <link rel="stylesheet" href="{{.StaticPath}}style.css">
     <link rel="stylesheet" href="{{.StaticPath}}fontawesome.css">
     <link href="data:image/png;base64,favicon_will_be_here" rel="icon" type="image/png" />
@@ -57,7 +56,7 @@
         <tr>
             <td class="iconRow"><i ondblclick="return rm(event)" onclick="return rename(event)" class="btn fa fa-folder-open"></i></td>
             <td class="file-size"><code>{{.Size}}</code></td>
-            <td class="arrow"><div class="arrow-icon"></div></td>
+            <td class="arrow"><i class="arrow-icon fa fa-long-arrow-right"></i></td>
             <td class="display-name"><a class="list-links" oncontextmenu="return setCursorTo(event.target.innerText)" onclick="return onClickLink(event)" href="{{.Href}}">{{.Name}}</a></td>
         </tr>
     {{end}}
@@ -65,7 +64,7 @@
         <tr>
             <td class="iconRow"><i ondblclick="return rm(event)" onclick="return rename(event)" class="btn fa {{ .Ext }}"></i></td>
             <td class="file-size"><code>{{.Size}}</code></td>
-            <td class="arrow"><div class="arrow-icon"></div></td>
+            <td class="arrow"><i class="arrow-icon fa fa-long-arrow-right"></i></td>
             <td class="display-name"><a class="list-links" oncontextmenu="return setCursorTo(event.target.innerText)" onclick="return onClickLink(event)" href="{{.Href}}">{{.Name}}</a></td>
         </tr>
     {{end}}

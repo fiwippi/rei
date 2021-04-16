@@ -71,10 +71,17 @@ body {
   background-color: rgba(123, 123, 123, 0.5);
 }
 
-.arrow-selected {
-  background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0ndXRmLTgnPz4KPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDEyOSAxMjkiIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAxMjkgMTI5Ij4KICA8Zz4KICAgIDxwYXRoIGQ9Im00MC40LDEyMS4zYy0wLjgsMC44LTEuOCwxLjItMi45LDEuMnMtMi4xLTAuNC0yLjktMS4yYy0xLjYtMS42LTEuNi00LjIgMC01LjhsNTEtNTEtNTEtNTFjLTEuNi0xLjYtMS42LTQuMiAwLTUuOCAxLjYtMS42IDQuMi0xLjYgNS44LDBsNTMuOSw1My45YzEuNiwxLjYgMS42LDQuMiAwLDUuOGwtNTMuOSw1My45eiIvPgogIDwvZz4KPC9zdmc+Cg==");
+.arrow-selected.fa.arrow-icon {
+  color: #f1c40f;
   height: inherit;
   width: inherit;
+  display: block;
+  text-shadow: none;
+}
+
+.arrow-icon.fa {
+  color: #000000;
+  display: none;
 }
 
 .arrow {
@@ -84,8 +91,8 @@ body {
   font-size: 1.15em;
   font-weight: bold;
   padding-left: .5em;
-  filter: invert(100%) !important;
   padding-bottom: 4px;
+  pointer-events: none;
 }
 
 table {
@@ -124,9 +131,13 @@ h1 {
   cursor: pointer;
 }
 
-a:hover, h1 > span:hover, .fa:hover, .item-selected {
+a:hover, h1 > span:hover, .fa:hover {
   color: #f1c40f;
   text-shadow: 3px 3px 2px #513e3e;
+}
+
+.item-selected {
+  color: #f1c40f;
 }
 
 #icHolder {

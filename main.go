@@ -7,11 +7,10 @@ import (
 	"log"
 )
 
+// TODO light and dark theme
 // TODO add modtime
 // TODO at the end, verify dockerfile works
 // TODO add more sorting options e.g. by size, by modtime
-// TODO capitalisation and formatting in help message
-// TODO styling hovering over files/folders
 // TODO ability to drag drop file one directory up?
 // TODO more verbose moving dialogue, i.e. show percentage
 // TODO change styling of underlining when ctrl-x cutting a path
