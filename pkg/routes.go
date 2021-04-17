@@ -244,5 +244,5 @@ func zipDir(w http.ResponseWriter, r *http.Request) {
 
 //
 func redirectToFs(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, "/fs", 302)
+	http.Redirect(w, r, fsPath, 302)
 }
