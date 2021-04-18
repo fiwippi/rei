@@ -1,6 +1,7 @@
 package rei
 
 import (
+	"embed"
 	"flag"
 	"fmt"
 	"html/template"
@@ -19,6 +20,9 @@ const (
 	skipHiddenDef = true
 	roDef         = false
 )
+
+//go:embed static/*
+var efs embed.FS
 
 // Flags for rei
 var symlinks, skipHidden, ro bool
@@ -54,7 +58,7 @@ func readTemplates(f fs.FS) error {
 	return nil
 }
 
-func Server(f fs.FS) (*http.Server, error) {
+func Server() (*http.Server, error) {
 	// Set the flags
 	flag.StringVar(&host, "host", hostDef, "Host to listen on")
 	flag.StringVar(&port, "port", portDef, "Port to listen on")
@@ -84,13 +88,18 @@ func Server(f fs.FS) (*http.Server, error) {
 		initPath = strings.TrimSuffix(initPath, "\\")
 	}
 
-	return ServerWithOpts(host, port, user, pass, extraPath, *logDir, symlinks, skipHidden, ro, *logToFile, *logToConsole, f)
+	return ServerWithOpts(host, port, user, pass, extraPath, *logDir, symlinks, skipHidden, ro, *logToFile, *logToConsole)
 }
 
-func ServerWithOpts(Host, Port, User, Pass, ExtraPath, LogDir string, Symlinks, SkipHidden, Ro, LogToFile, LogToConsole bool, f fs.FS) (*http.Server, error) {
+func ServerWithOpts(Host, Port, User, Pass, ExtraPath, LogDir string, Symlinks, SkipHidden, Ro, LogToFile, LogToConsole bool) (*http.Server, error) {
 	var err error
 
 	createLogger(LogDir, LogToConsole, LogToFile)
+
+	f, err := fs.Sub(efs, "static")
+	if err != nil {
+		Log.Fatal().Err(err).Msg("Failed loading static filesystem")
+	}
 
 	// User, Pass and the bool var do not need to be checked for defaults
 	user = User

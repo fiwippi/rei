@@ -1,22 +1,12 @@
 package main
 
 import (
-	"embed"
 	rei "github.com/fiwippi/rei/pkg"
-	"io/fs"
 	"log"
 )
 
-//go:embed static/*
-var f embed.FS
-
 func main() {
-	f, err := fs.Sub(f, "static")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	server, err := rei.Server(f)
+	server, err := rei.Server()
 	if err != nil {
 		log.Fatal(err)
 	}
