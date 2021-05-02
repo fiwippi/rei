@@ -1,0 +1,23 @@
+name: package-rei
+
+on:
+  create:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-publish-tag:
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/') # Running this job only for tags
+
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - name: Push to GitHub Packages
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: docker.pkg.github.com
+          repository: fiwippi/rei/rei
+          tag_with_ref: true # Provide flag to extract Docker image tag from git reference
