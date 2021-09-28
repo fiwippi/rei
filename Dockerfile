@@ -14,5 +14,5 @@ ENV DATADIR="/shared" READONLY="false"
 ENV LOGDIR="./" LOG_TO_CONSOLE="false" LOG_TO_FILE="true"
 
 EXPOSE 8001
-RUN echo -e '/rei -host ${HOST} -port ${PORT} -skip-hidden=${SKIP_HIDDEN_FILES} -read-only=${READONLY} -follow-symlinks=${FOLLOW_SYMLINKS} --prefix=${PREFIX} -log-dir=${LOGDIR} -log-console=${LOG_TO_CONSOLE} -log-file=${LOG_TO_FILE} ${DATADIR}'>> /start.sh
+RUN echo -e '/rei -host ${HOST} -port ${PORT} -skip-hidden=${SKIP_HIDDEN_FILES} -read-only=${READONLY} -follow-symlinks=${FOLLOW_SYMLINKS} --prefix=${PREFIX} -log-dir=${LOGDIR} -log-console=${LOG_TO_CONSOLE} -log-file=${LOG_TO_FILE} -user=${USER} -pass=${PASS} ${DATADIR}'>> /start.sh
 ENTRYPOINT [ "sh", "/start.sh" ]

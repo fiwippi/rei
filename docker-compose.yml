@@ -3,7 +3,6 @@ version: '3'
 services:
   rei:
     build: .
-    container_name: rei
     restart: always
     ports:
       - 8001:8001
@@ -12,3 +11,5 @@ services:
     environment:
       - READONLY=false
       - SKIP_HIDDEN_FILES=false
+      - USER=admin
+      - PASS=admin
