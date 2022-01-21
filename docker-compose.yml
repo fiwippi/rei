@@ -3,13 +3,10 @@ version: '3'
 services:
   rei:
     build: .
-    restart: always
+    restart: unless-stopped
     ports:
-      - 8001:8001
+      - 8000:8000
     volumes:
       - ./:/shared
-    environment:
-      - READONLY=false
-      - SKIP_HIDDEN_FILES=false
-      - USER=admin
-      - PASS=admin
+    env_file:
+      - .env

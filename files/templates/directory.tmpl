@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Rei</title>
+    <link rel="stylesheet" href='{{versioning "/static/css/style.css"}}'>
+    <link rel="stylesheet" href='{{versioning "/static/css/fira_mono.css"}}'>
+    <link rel="stylesheet" href='{{versioning "/static/css/fontawesome.css"}}'>
+    <style>
+        .active {
+            box-shadow: inset 0px 0px 15px 0px #d87603;
+        }
+
+        .menu {
+            position: absolute;
+            border: 1px solid black;
+            background: white;
+            padding: 10px 10px;
+            font-size: 13px;
+        }
+
+        .menu a {
+            border-bottom: none;
+        }
+
+        .menu > ul {
+            list-style: none;
+            padding-inline-start: 0;
+            margin-block-start: 0;
+            margin-block-end: 0;
+        }
+    </style>
+    <script type="module">
+        import directory from {{versioning "/static/js/components/directory.js"}}
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('directory', directory)
+        })
+    </script>
+    <script defer src='{{versioning "/static/js/alpine.js"}}'></script>
+</head>
+<body>
+<div :class="showBox ? 'container active' : 'container'" x-ref="box" x-data="directory"
+    {{if not .Ro}} @dragover="showBox = true; $refs.file.style.zIndex='5'" {{end}}>
+
+    <!-- Context Menu for File --->
+    <div class="menu" id="fileCtx" style="display: none;">
+        <ul>
+            {{if not .Ro}}
+            <li><a href="javascript:;" @click="cutItem">Cut</a></li>
+            <hr>
+            <li><a href="javascript:;" @click="copyItem">Copy</a></li>
+            <hr>
+            <li><a href="javascript:;" @click="deleteItem">Delete</a></li>
+            <hr>
+            <li><a href="javascript:;" @click="renameItem">Rename</a></li>
+            <hr>
+            {{end}}
+            <li><a href="javascript:;" @click="showModal">QR Code</a></li>
+        </ul>
+    </div>
+    {{if not .Ro}}
+    <!-- Context Menu for pasting --->
+    <div class="menu" id="pasteCtx" style="display: none;">
+        <ul>
+            <li><a href="javascript:;" @click="pasteItem"
+                   :style="(Object.keys(highlightF).length === 0) && {color: 'grey', 'pointer-events': 'none'}">Paste</a></li>
+        </ul>
+    </div>
+    <!-- File Upload --->
+    <input style="opacity: 0; width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: -1"
+               x-ref="file" type="file" id="fileUpload" @change="newFiles($refs.file.files)" multiple
+               @dragleave="showBox = false; $refs.file.style.zIndex='-1'"
+               @drop="newFiles($event.target.files); showBox = false; $refs.file.style.zIndex='-1'">
+    {{end}}
+    <!-- Modal -->
+    <div x-bind="modal_bg" class="modal" x-cloak>
+        <div x-bind="modal_content" id="modal" class="modal__content" x-transition>
+            <span class="modal__close-button" x-bind="modal_close">&times;</span>
+            <div id="qrcode"></div>
+        </div>
+    </div>
+    <div class="main" id="main">
+        <!-- Directory div --->
+        <div id="directory">
+            <!-- Loading state --->
+            <p x-text="response" style="font-weight: bold"></p>
+            <!-- Current Filepath -->
+            <h1 id="folderHeader" @click="fhClick" x-cloak>/</h1>
+            <!-- Selection --->
+            <div class="flex--row" style="padding-bottom: 1em" x-show="response === ''" x-cloak>
+                <div class="flex__key--centered">
+                    <label for="sort_select" style="font-weight: bold">Sort:</label>
+                    <select id="sort_select" x-model="sortType">
+                        <option value="name">Name</option>
+                        <option value="size">Size</option>
+                        <option value="mod_time">Date</option>
+                    </select>
+                </div>
+                {{if not .Ro}}
+                    <button class="flex__key--centered" @click="$refs.file.click()">Upload <i class="fa fa-upload"></i></button>
+                    <button class="flex__key--centered" @click="newFolder">New Folder <i class="fa fa-folder-open"></i></button>
+                    <template x-if="status.length > 0">
+                        <p class="flex__key--centered flex__key--no-padding" x-text="status" style="font-weight: bold"></p>
+                    </template>
+                {{end}}
+                {{if .Auth}}
+                <button @click="logout">Logout</button>
+                {{end}}
+            </div>
+
+            <!-- Files --->
+            <table x-show="response === ''" x-cloak>
+                <template x-for="f in sortedFiles">
+                    <tr>
+                        <td class="iconRow">
+                            <template x-if="f.icon === 'fa-folder-open'">
+                                <!-- If we have a folder we add a link to it's zip --->
+                                <a :href="'/api' + f.href + '?zip=true'" style="border-bottom: none">
+                                    <i :class="'fa ' + f.icon"></i>
+                                </a>
+                            </template>
+                            <template x-if="f.icon !== 'fa-folder-open'">
+                                <i :class="'fa ' + f.icon"></i>
+                            </template>
+                        </td>
+                        <td class="file-size"><code  x-text="f.display_size"></code></td>
+                        <td class="mod-time"><code x-text="f.display_time"></code></td>
+                        <td class="display-name">
+                            <a :href="f.href" x-text="f.name" @contextmenu="loadFileMenu($event, f)"
+                               :style="(highlightF.name === f.name && highlightF.href === f.href) && { color: 'blue' }"></a>
+                        </td>
+                    </tr>
+                </template>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

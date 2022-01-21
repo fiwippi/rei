@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login</title>
+    <link rel="stylesheet" href='{{versioning "/static/css/style.css"}}'>
+    <link rel="stylesheet" href='{{versioning "/static/css/fira_mono.css"}}'>
+    <style>
+        @media only screen
+        and (max-device-width: 820px) {
+            .container {
+                padding-bottom: 0;
+                margin: 0;
+            }
+
+            html, body {
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            .container {
+                height: 100%;
+                grid-template-rows: 1fr;
+                grid-template-areas:
+			"lblank main rblank";
+            }
+
+            .login-div {
+                align-self: center
+            }
+
+            #login {
+                display: flex;
+                justify-content: center;
+                height: 100%;
+            }
+        }
+    </style>
+    <script type="module">
+        import createLogin from {{versioning "/static/js/components/login.js"}}
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('login', createLogin)
+        })
+    </script>
+    <script defer src='{{versioning "/static/js/alpine.js"}}'></script>
+</head>
+<body>
+<div class="container">
+    <div class='main'>
+        <div x-data="login" id="login">
+            <!-- Login Form -->
+            <div class="login-div">
+                <h2 class="flex__key--less-padding" style="text-align: center">Rei</h2>
+                <div class="flex--row" style="justify-content: center">
+                    <h4 class="flex__key--centered flex__key--less-padding">Username:</h4>
+                    <label class="flex__key--centered flex__key--less-padding"><input type="text" placeholder="Username" x-model="username" autocorrect="off" autocapitalize="none" autofocus></label>
+                </div>
+                <div class="flex--row" style="justify-content: center">
+                    <h4 class="flex__key--centered flex__key--less-padding">Password:</h4>
+                    <label class="flex__key--centered"><input type="password" placeholder="Password" x-model="password" x-bind='password_field' autocorrect="off" autocapitalize="none"></label>
+                </div>
+                <div class="flex--row" style="justify-content: center">
+                    <button x-bind="login_btn">Login</button>
+                </div>
+                <div class="flex--row" style="justify-content: center">
+                    <p x-text="response" style="font-weight: bold"></p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

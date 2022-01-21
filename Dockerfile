@@ -1,18 +1,23 @@
+# 1
 FROM golang:1.16.3-alpine3.13 as builder
 
 WORKDIR /app
 COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -o bin/rei
 
+#2
 FROM alpine
 
 COPY --from=builder /app/bin/rei /rei
 
-ENV HOST="0.0.0.0" PORT="8001" PREFIX="/"
-ENV FOLLOW_SYMLINKS="false" SKIP_HIDDEN_FILES="true"
-ENV DATADIR="/shared" READONLY="false"
-ENV LOGDIR="./" LOG_TO_CONSOLE="false" LOG_TO_FILE="true"
+ENV REI_USER=""
+ENV REI_PASS=""
+ENV REI_READ_ONLY="false"
+ENV REI_SHOW_HIDDEN_FILES="false"
+ENV REI_FOLLOW_SYMLINKS="false"
+ENV REI_DISABLE_AUTH="false"
+ENV GIN_MODE="release"
 
-EXPOSE 8001
-RUN echo -e '/rei -host ${HOST} -port ${PORT} -skip-hidden=${SKIP_HIDDEN_FILES} -read-only=${READONLY} -follow-symlinks=${FOLLOW_SYMLINKS} --prefix=${PREFIX} -log-dir=${LOGDIR} -log-console=${LOG_TO_CONSOLE} -log-file=${LOG_TO_FILE} -user=${USER} -pass=${PASS} ${DATADIR}'>> /start.sh
-ENTRYPOINT [ "sh", "/start.sh" ]
+RUN mkdir /shared
+EXPOSE 8000
+ENTRYPOINT /rei -host=0.0.0.0 -port=8000 -show-hidden=${REI_SHOW_HIDDEN_FILES} -read-only=${REI_READ_ONLY} -follow-symlinks=${REI_FOLLOW_SYMLINKS} -disable-auth=${REI_DISABLE_AUTH} -user=${REI_USER} -pass=${REI_PASS} /shared
