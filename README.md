@@ -14,12 +14,12 @@ A fast and simple webserver for your files:
 
 ## Install
 ```console
-$ go install https://github.com/fiwippi/rei.git
+$ go install github.com/fiwippi/rei
 ```
 
 ## Usage
-```sh
-% ./rei --help
+```console
+$ rei --help
 usage: ./rei ~/directory-to-serve
   -disable-auth
         disable authentication
@@ -40,7 +40,7 @@ usage: ./rei ~/directory-to-serve
   -user string
         username for log in
 
-% ./rei -host 192.168.100.33 ~/storage
+$ rei -host 192.168.100.33 ~/storage
 ```
 
 ## License
