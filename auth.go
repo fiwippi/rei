@@ -33,7 +33,6 @@ func authLogin(s *server) gin.HandlerFunc {
 
 func authLogout(s *server) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		fmt.Println("HUH")
 		s.Session.Delete(c)
 		c.Status(200)
 	}

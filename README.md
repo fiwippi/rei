@@ -11,6 +11,7 @@ A fast and simple webserver for your files:
 - user/pass access
 - zip file folder download
 - qrcode generation
+- folder upload (through drag + drop)
 
 ## Install
 ```console

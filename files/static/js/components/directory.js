@@ -182,6 +182,49 @@ export default function () {
                 })
         },
 
+        // File uploading
+        async dropFiles(e) {
+            e.stopPropagation();
+            e.preventDefault();
+
+            // If directory support is available
+            if(e.dataTransfer && e.dataTransfer.items)
+            {
+                let items = e.dataTransfer.items;
+                for (let i = 0; i < items.length; i++) {
+                    let item = items[i].webkitGetAsEntry();
+                    if (item) {
+                        await this._traverseFileTree(item);
+                    }
+                }
+            } else {
+                this.status = "Unsupported"
+            }
+
+            await Util.DOM.Sleep(500) // Requesting too soon after changing the filesystem leads to duplicate files
+            await this._loadFS()
+        },
+
+        async _traverseFileTree(item, path) {
+            let _this = this;
+            path = path || "";
+            if (item.isFile) {
+                // Get file
+                item.file(async (file) => {
+                    await this._newFiles([Util.Files.Rename(file, path + file.name)], false)
+                });
+            } else if (item.isDirectory) {
+                // Get folder contents
+                let dirReader = item.createReader();
+                dirReader.readEntries(async (entries) => {
+                    await this._newFolder(path + item.name, false)
+                    for (let i = 0; i < entries.length; i++) {
+                        await _this._traverseFileTree(entries[i], path + item.name + "/");
+                    }
+                });
+            }
+        },
+
         // Util functions
         _askOverwriteFiles(files) {
             // Check if we will be overwriting a file
@@ -190,7 +233,7 @@ export default function () {
                 for (let j = 0; j < files.length; j++) {
                     if (this.files[i].name === files[j].name) {
                         // Ask if we still have to overwrite
-                        let overwrite = confirm(`Do you want to overwrite '${files[j].name}' ?`)
+                        let overwrite = confirm(`Do you want to overwrite '${this.files[i].name}' ?`)
                         if (!overwrite)
                             remove.push(files[j]);
                     }
@@ -246,13 +289,15 @@ export default function () {
             let name = prompt("Folder Name", "");
             if (name === null || name === "")
                 return
+            await this._newFolder(name, true)
+        },
 
+        async _newFolder(name, reload) {
             if (!this._askOverwriteName(name))
                 return
-
             await API.FS.NewFolder(this.folder, name)
                 .then(() => {
-                    this._loadFS()
+                    if (reload) this._loadFS()
                     this.status = "Success"
                 })
                 .catch(() => {
@@ -261,13 +306,17 @@ export default function () {
         },
 
         async newFiles(files) {
+            return this._newFiles(files, true)
+        },
+
+        async _newFiles(files, reload) {
             let confirmed = this._askOverwriteFiles(files)
             if (confirmed.length === 0)
                 return
 
             await API.FS.NewFiles(this.folder, confirmed,
                 () => {
-                    this._loadFS()
+                    if (reload) this._loadFS()
                     this.status = "Success"
                 },
                 (e) => {

@@ -1,6 +1,8 @@
 package fse
 
-import "strings"
+import (
+	"strings"
+)
 
 var illegalChars = []rune{'<', '>', ':', '"', '\\', '/', '|', '?', '*'}
 
@@ -19,6 +21,24 @@ func Sanitise(input string) string {
 	}
 
 	return strings.TrimRight(sb.String(), ".")
+}
+
+func SanitiseFilepath(input string) string {
+	parts := strings.Split(input, "/")
+	var sb strings.Builder
+	if strings.HasPrefix(input, "/") {
+		sb.WriteRune('/')
+	}
+	for _, p := range parts {
+		sb.WriteString(Sanitise(p))
+		sb.WriteRune('/')
+	}
+	remade := sb.String()
+	if !strings.HasSuffix(input, "/") {
+		remade = strings.TrimSuffix(remade, "/")
+	}
+
+	return remade
 }
 
 func IsSanitised(input string) bool {

@@ -127,6 +127,13 @@ export class Files {
 
         return href
     }
+
+    static Rename(originalFile, newName) {
+        return new File([originalFile], newName, {
+            type: originalFile.type,
+            lastModified: originalFile.lastModified,
+        });
+    };
 }
 
 export class DOM {
@@ -144,5 +151,9 @@ export class DOM {
 
     static InvalidObject(o) {
         return o === null || o === undefined
+    }
+
+    static Sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 }

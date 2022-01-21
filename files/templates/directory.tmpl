@@ -41,7 +41,7 @@
 </head>
 <body>
 <div :class="showBox ? 'container active' : 'container'" x-ref="box" x-data="directory"
-    {{if not .Ro}} @dragover="showBox = true; $refs.file.style.zIndex='5'" {{end}}>
+    {{if not .Ro}} @dragover="showBox = true; $refs.files.style.zIndex='5'" {{end}}>
 
     <!-- Context Menu for File --->
     <div class="menu" id="fileCtx" style="display: none;">
@@ -68,10 +68,11 @@
         </ul>
     </div>
     <!-- File Upload --->
+    <input style="display: none" x-ref="file" type="file" @change="newFiles($refs.file.files)" multiple>
     <input style="opacity: 0; width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: -1"
-               x-ref="file" type="file" id="fileUpload" @change="newFiles($refs.file.files)" multiple
-               @dragleave="showBox = false; $refs.file.style.zIndex='-1'"
-               @drop="newFiles($event.target.files); showBox = false; $refs.file.style.zIndex='-1'">
+               x-ref="files" type="file" @change="await dropFiles($event)" webkitdirectory multiple
+               @dragleave="showBox = false; $refs.files.style.zIndex='-1'"
+               @drop="await dropFiles($event); showBox = false; $refs.files.style.zIndex='-1'">
     {{end}}
     <!-- Modal -->
     <div x-bind="modal_bg" class="modal" x-cloak>
@@ -87,7 +88,7 @@
             <p x-text="response" style="font-weight: bold"></p>
             <!-- Current Filepath -->
             <h1 id="folderHeader" @click="fhClick" x-cloak>/</h1>
-            <!-- Selection --->
+            <!-- Buttons --->
             <div class="flex--row" style="padding-bottom: 1em" x-show="response === ''" x-cloak>
                 <div class="flex__key--centered">
                     <label for="sort_select" style="font-weight: bold">Sort:</label>
@@ -98,8 +99,8 @@
                     </select>
                 </div>
                 {{if not .Ro}}
-                    <button class="flex__key--centered" @click="$refs.file.click()">Upload <i class="fa fa-upload"></i></button>
-                    <button class="flex__key--centered" @click="newFolder">New Folder <i class="fa fa-folder-open"></i></button>
+                    <button class="flex__key--centered" @click="$refs.file.click()">File Upload  <i class="fa fa-upload"></i></button>
+                    <button class="flex__key--centered" @click="newFolder">New Folder  <i class="fa fa-folder-open"></i></button>
                     <template x-if="status.length > 0">
                         <p class="flex__key--centered flex__key--no-padding" x-text="status" style="font-weight: bold"></p>
                     </template>
@@ -108,7 +109,6 @@
                 <button @click="logout">Logout</button>
                 {{end}}
             </div>
-
             <!-- Files --->
             <table x-show="response === ''" x-cloak>
                 <template x-for="f in sortedFiles">

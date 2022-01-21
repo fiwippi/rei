@@ -88,6 +88,7 @@ export class FS {
         form.append("name", name)
         form.append('type', "folder");
 
+        if (dir === "/") dir = ""
         return fetchResource(`fs/${dir}`, {
             method: 'POST',
             body: form,
@@ -119,6 +120,7 @@ export class FS {
         xhr.upload.addEventListener('progress', progress);
 
         // Send the request
+        if (dir === "/") dir = ""
         xhr.open('POST', API_URL + `fs/${dir}`);
         xhr.send(form)
     }

@@ -121,7 +121,7 @@ func apiCreateItem(_ *server) gin.HandlerFunc {
 			}
 
 			// Check if the folder already exists
-			folderPath := path + "/" + fse.Sanitise(item.Name)
+			folderPath := path + "/" + fse.SanitiseFilepath(item.Name)
 			if fse.Exists(folderPath) {
 				c.Status(200)
 				return
@@ -141,7 +141,7 @@ func apiCreateItem(_ *server) gin.HandlerFunc {
 
 			// We save the file
 			for _, f := range item.Files {
-				err = c.SaveUploadedFile(f, path+"/"+fse.Sanitise(f.Filename))
+				err = c.SaveUploadedFile(f, path+"/"+fse.SanitiseFilepath(f.Filename))
 				if err != nil {
 					c.AbortWithError(500, err)
 					return

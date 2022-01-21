@@ -1,7 +1,7 @@
 package fse
 
 import (
-	"io/ioutil"
+	"os"
 	"sort"
 	"strings"
 
@@ -17,25 +17,30 @@ type File struct {
 }
 
 func ReadDir(path string, skipHidden bool) ([]File, error) {
-	dir, err := ioutil.ReadDir(path)
+	dir, err := os.ReadDir(path)
 	if err != nil {
 		return nil, err
 	}
 
 	files := make([]File, 0, len(dir))
-	for _, f := range dir {
-		a := strings.HasPrefix(f.Name(), ".")
-		b := strings.HasPrefix(f.Name(), "~$") // Microsoft office files
+	for _, d := range dir {
+		fi, err := d.Info()
+		if err != nil {
+			return nil, err
+		}
+
+		a := strings.HasPrefix(fi.Name(), ".")
+		b := strings.HasPrefix(fi.Name(), "~$") // Microsoft office files
 		if skipHidden && (a || b) {
 			continue
 		}
 
 		file := File{
-			folder:  f.IsDir(),
-			Icon:    fontawesome.Style(f),
-			ModTime: f.ModTime().Unix(),
-			Name:    f.Name(),
-			Size:    f.Size(),
+			folder:  fi.IsDir(),
+			Icon:    fontawesome.Style(fi),
+			ModTime: fi.ModTime().Unix(),
+			Name:    fi.Name(),
+			Size:    fi.Size(),
 		}
 		files = append(files, file)
 	}
