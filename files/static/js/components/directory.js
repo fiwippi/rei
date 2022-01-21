@@ -436,6 +436,7 @@ export default function () {
             correctLevel : QRCode.CorrectLevel.H
         }),
         visible: false,
+        fileLink: '',
 
         modal_bg: {
             ['x-show']() {
@@ -465,7 +466,9 @@ export default function () {
                 return
 
             this.qr.clear()
-            this.qr.makeCode(`${window.location.protocol}//${window.location.hostname}${f.href}`);
+            const link = `${window.location.protocol}//${window.location.hostname}${f.href}`
+            this.fileLink = link
+            this.qr.makeCode(link);
             this.visible = true
         },
         hideModal() { this.visible = false },
