@@ -40,7 +40,7 @@ type server struct {
 
 func NewServer(host, port, user, pass, root string, skip, ro, sym, disableAuth bool) (*http.Server, error) {
 	// Clean up some arguments
-	if strings.HasSuffix(root, "/") {
+	if len(root) > 1 && strings.HasSuffix(root, "/") {
 		root = strings.TrimSuffix(root, "/")
 	}
 	if !filepath.IsAbs(root) {
