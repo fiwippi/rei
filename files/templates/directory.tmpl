@@ -101,12 +101,14 @@
                 {{if not .Ro}}
                     <button class="flex__key--centered" @click="$refs.file.click()">File Upload  <i class="fa fa-upload"></i></button>
                     <button class="flex__key--centered" @click="newFolder">New Folder  <i class="fa fa-folder-open"></i></button>
+                {{end}}
+                {{if .Auth}}
+                    <button @click="logout">Logout</button>
+                {{end}}
+                {{if not .Ro}}
                     <template x-if="status.length > 0">
                         <p class="flex__key--centered flex__key--no-padding" x-text="status" style="font-weight: bold"></p>
                     </template>
-                {{end}}
-                {{if .Auth}}
-                <button @click="logout">Logout</button>
                 {{end}}
             </div>
             <!-- Files --->

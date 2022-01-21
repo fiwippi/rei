@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	zerolog.SetGlobalLevel(zerolog.TraceLevel)
+	zerolog.SetGlobalLevel(zerolog.DebugLevel)
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stdout, TimeFormat: "15:04:05"})
 }
 
