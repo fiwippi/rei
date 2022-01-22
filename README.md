@@ -21,7 +21,7 @@ $ go install github.com/fiwippi/rei
 ## Usage
 ```console
 $ rei --help
-usage: ./rei ~/directory-to-serve
+Usage: ./rei ~/directory-to-serve
   -disable-auth
         disable authentication
   -follow-symlinks

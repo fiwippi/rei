@@ -22,7 +22,7 @@ func main() {
 	passStdin := flag.Bool("pass-stdin", false, "read the password from stdin")
 
 	flag.Usage = func() {
-		fmt.Printf("usage: ./rei ~/directory-to-serve\n")
+		fmt.Printf("Usage: ./rei ~/directory-to-serve\n")
 		flag.PrintDefaults()
 	}
 
