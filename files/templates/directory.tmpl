@@ -12,24 +12,14 @@
             box-shadow: inset 0px 0px 15px 0px #d87603;
         }
 
-        .menu {
-            position: absolute;
-            border: 1px solid black;
-            background: white;
-            padding: 10px 10px;
-            font-size: 13px;
+        @media only screen
+        and (max-device-width: 820px) {
+            .iosNoCtx {
+                -webkit-user-select: none !important;
+                -webkit-touch-callout: none !important;
+            }
         }
 
-        .menu a {
-            border-bottom: none;
-        }
-
-        .menu > ul {
-            list-style: none;
-            padding-inline-start: 0;
-            margin-block-start: 0;
-            margin-block-end: 0;
-        }
     </style>
     <script type="module">
         import directory from {{versioning "/static/js/components/directory.js"}}
@@ -40,7 +30,7 @@
     <script defer src='{{versioning "/static/js/alpine.js"}}'></script>
 </head>
 <body>
-<div :class="showBox ? 'container active' : 'container'" x-ref="box" x-data="directory"
+<div id="container" :class="showBox ? 'container active' : 'container'" x-ref="box" x-data="directory"
     {{if not .Ro}} @dragover="showBox = true; $refs.files.style.zIndex='5'" {{end}}>
 
     <!-- Context Menu for File --->
@@ -132,7 +122,8 @@
                         <td class="file-size"><code  x-text="f.display_size"></code></td>
                         <td class="mod-time"><code x-text="f.display_time"></code></td>
                         <td class="display-name">
-                            <a :href="f.href" x-text="f.name" @contextmenu="loadFileMenu($event, f)"
+                            <a class="iosNoCtx" :href="f.href" x-text="f.name"
+                               @long-press="loadFileMenu($event, f)" @contextmenu="loadFileMenu($event, f)"
                                :style="(highlightF.name === f.name && highlightF.href === f.href) && { color: 'blue' }"></a>
                         </td>
                     </tr>

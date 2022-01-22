@@ -23,9 +23,9 @@ export class Compare {
         const x = a.icon.includes("folder")
         const y = b.icon.includes("folder")
         if (x !== y) {
-            return x && !y
+            return !x && y
         }
-        return 0
+        return 0;
     }
 
     static ModTime(a, b) {
@@ -137,14 +137,20 @@ export class Files {
 }
 
 export class DOM {
-    static IsEventInElement(event, element)   {
+    static IsEventInElement(e, element)   {
         if (!(typeof element.getBoundingClientRect === "function"))
             return false
 
+        // For long-press
+        if (e.detail.clientX !== undefined && e.detail.clientX !== null) {
+            e.clientX = e.detail.clientX
+            e.clientY = e.detail.clientY
+        }
+
         let rect = element.getBoundingClientRect();
-        let x = event.clientX;
+        let x = e.clientX;
         if (x < rect.left || x >= rect.right) return false;
-        let y = event.clientY;
+        let y = e.clientY;
         if (y < rect.top || y >= rect.bottom) return false;
         return true;
     }
