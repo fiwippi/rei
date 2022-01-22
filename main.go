@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	host := flag.String("host", "", "host to bind to")
+	host := flag.String("host", "0.0.0.0", "host to bind to")
 	port := flag.String("port", "8000", "port to bind to")
 	user := flag.String("user", "", "username for log in")
 	pass := flag.String("pass", "", "password for log in")
