@@ -10,9 +10,6 @@ import (
 	"github.com/fiwippi/rei/internal/log"
 )
 
-// TODO support log level
-// TODO support dropping folders
-
 func main() {
 	host := flag.String("host", "", "host to bind to")
 	port := flag.String("port", "8000", "port to bind to")
