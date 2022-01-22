@@ -172,6 +172,10 @@ and (max-device-width: 820px) {
   .header {
     margin-bottom: 0;
   }
+
+  td {
+    white-space: normal;
+  }
 }
 
 /* Modal styles -------------------------------------------------*/
