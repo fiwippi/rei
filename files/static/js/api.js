@@ -109,11 +109,11 @@ export class FS {
 
         // Create the request
         let xhr = new XMLHttpRequest();
-        xhr.addEventListener('load', (e) => {
+        xhr.addEventListener('loadend', async (e) => {
             if (e.target.status >= 400 && e.target.status <= 500)
-                error(e)
+                await error(e)
             else
-                success(e)
+                await success(e)
         });
         xhr.addEventListener('error', error);
         xhr.addEventListener('abort', error);

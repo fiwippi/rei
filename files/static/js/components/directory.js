@@ -26,7 +26,10 @@ export default function () {
             return []
         },
 
-        async _loadFS() {
+        async _loadFS(reloading) {
+            if (reloading) await Util.DOM.Sleep(500) // Requesting too soon after changing the filesystem leads to duplicate files
+            console.debug("loading fs")
+
             // Clear the current file storage
             this._clearStorage(currentStorage)
             // Hide the context menus
@@ -36,6 +39,7 @@ export default function () {
             // Get the files
             await API.FS.ViewDir((this.folder === "/") ? "" : this.folder)
                 .then(resp => {
+                    console.debug("loaded fs", resp)
                     // Get the files
                     this.files = resp
 
@@ -78,6 +82,7 @@ export default function () {
                     this.response = ""
                 })
                 .catch((e) => {
+                    console.debug("failed fs", e)
                     this.status = ""
                     if (e.status === 404)
                         this.response = "404 | Page Not Found"
@@ -221,8 +226,8 @@ export default function () {
                 this.status = "Unsupported"
             }
 
-            await Util.DOM.Sleep(500) // Requesting too soon after changing the filesystem leads to duplicate files
-            await this._loadFS()
+            await Util.DOM.Sleep(500)
+            await this._loadFS(true)
         },
 
         async _traverseFileTree(item, path) {
@@ -231,13 +236,13 @@ export default function () {
             if (item.isFile) {
                 // Get file
                 item.file(async (file) => {
-                    await this._newFiles([Util.Files.Rename(file, path + file.name)], false)
+                    await this._newFiles([Util.Files.Rename(file, path + file.name)], true)
                 });
             } else if (item.isDirectory) {
                 // Get folder contents
                 let dirReader = item.createReader();
                 dirReader.readEntries(async (entries) => {
-                    await this._newFolder(path + item.name, false)
+                    await this._newFolder(path + item.name, true)
                     for (let i = 0; i < entries.length; i++) {
                         await _this._traverseFileTree(entries[i], path + item.name + "/");
                     }
@@ -317,7 +322,7 @@ export default function () {
                 return
             await API.FS.NewFolder(this.folder, name)
                 .then(() => {
-                    if (reload) this._loadFS()
+                    if (reload) this._loadFS(true)
                     this.status = "Success"
                 })
                 .catch(() => {
@@ -335,8 +340,9 @@ export default function () {
                 return
 
             await API.FS.NewFiles(this.folder, confirmed,
-                () => {
-                    if (reload) this._loadFS()
+                async (e) => {
+                    console.debug("success upload", e)
+                    if (reload) await this._loadFS(true)
                     this.status = "Success"
                 },
                 (e) => {
@@ -373,7 +379,7 @@ export default function () {
 
             await API.FS.DeleteItem(this.folder + f.name)
                 .then(() => {
-                    this._loadFS()
+                    this._loadFS(false)
                     this.status = "Success"
                 })
                 .catch(() => {
@@ -404,7 +410,7 @@ export default function () {
             let newPath = this.folder + name
             await API.FS.MoveItem(oldPath, newPath, "cut")
                 .then(() => {
-                    this._loadFS()
+                    this._loadFS(false)
                     this.status = "Success"
                 })
                 .catch(() => {
@@ -437,7 +443,7 @@ export default function () {
             // Perform the rename
             await API.FS.MoveItem(oldPath, newPath, sessionStorage.getItem(modeStorage))
                 .then(() => {
-                    this._loadFS()
+                    this._loadFS(false)
                     this.status = "Success"
                 })
                 .catch(() => {

@@ -114,6 +114,8 @@ func NewServer(host, port, user, pass, root string, skip, ro, sym, disableAuth b
 	registerAPI(s)
 	registerFavicon(s, "files/static/icon/favicon.ico")
 
+	r.MaxMultipartMemory = (5 * 4096) << 20 // 20 GB
+
 	log.Info().Str("host", host).Str("port", port).Str("root", root).
 		Bool("skip_hidden", skip).Bool("read_only", ro).Bool("follow_symlinks", sym).
 		Bool("disable_auth", disableAuth).Msg("server config")

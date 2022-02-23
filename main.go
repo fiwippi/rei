@@ -10,6 +10,9 @@ import (
 	"github.com/fiwippi/rei/internal/log"
 )
 
+// TODO akira-ascii not uploading (stuck at 0.10%)
+// TODO files not always refreshing on reload
+
 func main() {
 	host := flag.String("host", "0.0.0.0", "host to bind to")
 	port := flag.String("port", "8000", "port to bind to")
