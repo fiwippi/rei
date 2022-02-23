@@ -14,6 +14,7 @@ import (
 
 	"github.com/fiwippi/rei/internal/auth"
 	"github.com/fiwippi/rei/internal/fse"
+	"github.com/fiwippi/rei/internal/log"
 )
 
 func registerAPI(s *server) {
@@ -93,6 +94,7 @@ func apiViewItem(s *server) gin.HandlerFunc {
 func apiCreateItem(_ *server) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		path := c.GetString("filepath")
+		log.Debug().Str("path", path).Msg("creating item")
 
 		item := struct {
 			Type  string                  `form:"type" binding:"required,eq=file|eq=folder"`
@@ -103,6 +105,7 @@ func apiCreateItem(_ *server) gin.HandlerFunc {
 			c.AbortWithError(400, err)
 			return
 		}
+		log.Debug().Interface("item", item).Msg("binded item")
 
 		// Check the parent exists
 		fi, err := os.Stat(path)
@@ -141,11 +144,13 @@ func apiCreateItem(_ *server) gin.HandlerFunc {
 
 			// We save the file
 			for _, f := range item.Files {
+				log.Debug().Str("path", path+"/"+fse.SanitiseFilepath(f.Filename)).Msg("saving file")
 				err = c.SaveUploadedFile(f, path+"/"+fse.SanitiseFilepath(f.Filename))
 				if err != nil {
 					c.AbortWithError(500, err)
 					return
 				}
+				log.Debug().Str("path", path+"/"+fse.SanitiseFilepath(f.Filename)).Msg("file saved")
 			}
 		}
 
